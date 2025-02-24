@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  AppShell,
+  Burger,
+  Group,
+  MantineProvider,
+  NavLink,
+  Text,
+} from "@mantine/core";
+
+import { useDisclosure } from "@mantine/hooks";
+import { Outlet, useLocation } from "react-router";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [opened, { toggle }] = useDisclosure();
+  const location = useLocation();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <MantineProvider>
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 300,
+          breakpoint: "sm",
+          collapsed: { mobile: !opened },
+        }}
+        padding="md"
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md">
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="sm"
+              size="sm"
+            />
+            <Text>
+              Effectively Rendering Large Datasets - BoulderJS 02/26/25
+            </Text>
+          </Group>
+        </AppShell.Header>
+        <AppShell.Navbar p="md">
+          <NavLink href="/" label="Intro" active={location.pathname === "/"} />
+          <NavLink
+            href="problematic"
+            label="Problematic example"
+            active={location.pathname === "/problematic"}
+          />
+          <NavLink
+            href="improved"
+            label="Improved example"
+            active={location.pathname === "/improved"}
+          />
+        </AppShell.Navbar>
+        <AppShell.Main>
+          <Outlet />
+        </AppShell.Main>
+      </AppShell>
+    </MantineProvider>
+  );
 }
 
-export default App
+export default App;
