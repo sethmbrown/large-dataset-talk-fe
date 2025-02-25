@@ -4,8 +4,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Embedding } from "../types";
-import { Table } from "@mantine/core";
-import { columns, formatNumber } from "../utils/table-utils";
+import { Table, Tooltip } from "@mantine/core";
+import { columns } from "../utils/table-utils";
+import { RowAndNodeCounter } from "./row-and-node-counter";
+import { TABLE_HEIGHT } from "../constants";
 
 export const NonVirtualizedTable = ({ data = [] }: { data: Embedding[] }) => {
   const table = useReactTable({
@@ -14,15 +16,13 @@ export const NonVirtualizedTable = ({ data = [] }: { data: Embedding[] }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const nodesOnDom = formatNumber(document.querySelectorAll("td").length);
-
   return (
     <>
       <p>Non Virtualized Table</p>
-      <p>Table nodes painted to DOM - {nodesOnDom}</p>
+      <RowAndNodeCounter data={data} />
       <div
         style={{
-          maxHeight: "600px",
+          maxHeight: TABLE_HEIGHT,
           overflow: "scroll",
         }}
       >
@@ -47,9 +47,17 @@ export const NonVirtualizedTable = ({ data = [] }: { data: Embedding[] }) => {
             {table.getRowModel().rows.map((row) => (
               <Table.Tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <Table.Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Table.Td>
+                  <Tooltip
+                    key={cell.id}
+                    label={(cell.getValue() as number).toFixed(3)}
+                  >
+                    <Table.Td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </Table.Td>
+                  </Tooltip>
                 ))}
               </Table.Tr>
             ))}

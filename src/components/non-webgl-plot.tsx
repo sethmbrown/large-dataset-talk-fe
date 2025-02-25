@@ -1,5 +1,6 @@
 import Plot from "react-plotly.js";
 import { Embedding } from "../types";
+import { CHART_HEIGHT } from "../constants";
 
 export const NonWebGlPlot = ({ data = [] }: { data: Embedding[] }) => {
   return (
@@ -19,7 +20,7 @@ export const NonWebGlPlot = ({ data = [] }: { data: Embedding[] }) => {
         yaxis: { title: "Y Axis" },
         dragmode: "pan", // Default drag mode (use 'zoom' for zooming)
         autosize: true,
-        height: 500,
+        height: CHART_HEIGHT,
         showlegend: false,
       }}
       config={{

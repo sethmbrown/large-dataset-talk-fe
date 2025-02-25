@@ -7,14 +7,16 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { Embedding } from "../types";
-import { columns, formatNumber } from "../utils/table-utils";
+import { columns } from "../utils/table-utils";
 import { useRef } from "react";
 import {
   useVirtualizer,
   VirtualItem,
   Virtualizer,
 } from "@tanstack/react-virtual";
-import { Table as MantineTable } from "@mantine/core";
+import { Table as MantineTable, Tooltip } from "@mantine/core";
+import { RowAndNodeCounter } from "./row-and-node-counter";
+import { TABLE_HEIGHT } from "../constants";
 
 export const VirtualizedTable = ({ data = [] }: { data: Embedding[] }) => {
   // The virtualizer will need a reference to the scrollable container element
@@ -27,19 +29,17 @@ export const VirtualizedTable = ({ data = [] }: { data: Embedding[] }) => {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const nodesOnDom = formatNumber(document.querySelectorAll("td").length);
-
   return (
     <>
-      <p>Non Virtualized Table</p>
-      <p>Table nodes painted to DOM - {nodesOnDom}</p>
+      <p>Virtualized Table</p>
+      <RowAndNodeCounter data={data} />
       <div
         className="container"
         ref={tableContainerRef}
         style={{
           overflow: "auto", //our scrollable table container
           position: "relative", //needed for sticky header
-          height: "600px", //should be a fixed height
+          height: TABLE_HEIGHT, //should be a fixed height
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -165,15 +165,16 @@ function TableBodyRow({ row, virtualRow, rowVirtualizer }: TableBodyRowProps) {
     >
       {row.getVisibleCells().map((cell) => {
         return (
-          <MantineTable.Td
-            key={cell.id}
-            style={{
-              display: "flex",
-              width: cell.column.getSize(),
-            }}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </MantineTable.Td>
+          <Tooltip key={cell.id} label={(cell.getValue() as number).toFixed(3)}>
+            <MantineTable.Td
+              style={{
+                display: "flex",
+                width: cell.column.getSize(),
+              }}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </MantineTable.Td>
+          </Tooltip>
         );
       })}
     </MantineTable.Tr>

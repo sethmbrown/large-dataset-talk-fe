@@ -13,6 +13,9 @@ export const columns = [
   columnHelper.accessor("y", {
     cell: (info) => info.getValue().toFixed(3),
   }),
+  columnHelper.accessor("z", {
+    cell: (info) => info.getValue().toFixed(3),
+  }),
 ];
 
 export const formatNumber = (num?: number) => {

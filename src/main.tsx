@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ProblematicPage } from "./pages/problematic-page.tsx";
 import { ImprovedPage } from "./pages/improved-page.tsx";
-import { ExplanationPage } from "./pages/ExplanationPage.tsx";
+import { ExplanationPage } from "./pages/explanation-page.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
